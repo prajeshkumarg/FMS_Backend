@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NpgsqlTypes;
 
-namespace FMS_Backend;
+namespace FMS_Backend.FMSModels;
 
 public partial class FuelLocation
 {

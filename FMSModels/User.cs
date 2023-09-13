@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FMS_Backend;
+namespace FMS_Backend.FMSModels;
 
 public partial class User
 {
@@ -13,5 +13,7 @@ public partial class User
 
     public string? Role { get; set; }
 
-    public string? Password { get; set; }
+    public byte[]? PasswordHash { get; set; }
+
+    public byte[]? PasswordSalt { get; set; }
 }

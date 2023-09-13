@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FMS_Backend;
+using FMS_Backend.FMSModels;
+using System.Security.Cryptography;
 
 namespace FMS_Backend.Controllers
 {
@@ -14,6 +16,7 @@ namespace FMS_Backend.Controllers
     public class UsersController : ControllerBase
     {
         private readonly FuelManagementSystemContext _context;
+        public User user = new User();
 
         public UsersController(FuelManagementSystemContext context)
         {
@@ -84,12 +87,57 @@ namespace FMS_Backend.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Route("SignUp")]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser(UserDto request)
         {
           if (_context.Users == null)
           {
               return Problem("Entity set 'FuelManagementSystemContext.Users'  is null.");
           }
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            user.Username = request.Username;
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            user.Contact = request.Contact;
+            user.Role = request.Role;
+            user.Userid = request.Userid;
+
+            _context.Users.Add(user);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (UserExists(user.Userid))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return CreatedAtAction("GetUser", new { id = user.Userid }, user);
+        }
+
+        [HttpPost]
+        [Route("SignIn")]
+        public async Task<ActionResult<User>> LoginUser(UserDto request)
+        {
+            if (_context.Users == null)
+            {
+                return Problem("Entity set 'FuelManagementSystemContext.Users'  is null.");
+            }
+            if (UserExists(request.Userid))
+            {
+
+            }
+            else
+            {
+                return Problem("Username or Password is Wrong");
+            }
+
             _context.Users.Add(user);
             try
             {
@@ -137,6 +185,23 @@ namespace FMS_Backend.Controllers
         private bool UserExists(string username)
         {
             return (_context.Users?.Any(e => e.Username == username)).GetValueOrDefault();
+        }
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
+
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(passwordHash);
+            }
         }
     }
 }

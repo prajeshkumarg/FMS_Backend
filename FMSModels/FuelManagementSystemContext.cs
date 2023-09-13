@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace FMS_Backend;
+namespace FMS_Backend.FMSModels;
 
 public partial class FuelManagementSystemContext : DbContext
 {
@@ -59,9 +59,7 @@ public partial class FuelManagementSystemContext : DbContext
 
             entity.ToTable("fuel_location");
 
-            entity.Property(e => e.Locid)
-                .ValueGeneratedNever()
-                .HasColumnName("locid");
+            entity.Property(e => e.Locid).HasColumnName("locid");
             entity.Property(e => e.Address)
                 .HasMaxLength(60)
                 .HasColumnName("address");
@@ -115,15 +113,12 @@ public partial class FuelManagementSystemContext : DbContext
 
             entity.ToTable("user");
 
-            entity.Property(e => e.Userid)
-                .ValueGeneratedNever()
-                .HasColumnName("userid");
+            entity.Property(e => e.Userid).HasColumnName("userid");
             entity.Property(e => e.Contact)
                 .HasMaxLength(60)
                 .HasColumnName("contact");
-            entity.Property(e => e.Password)
-                .HasMaxLength(60)
-                .HasColumnName("password");
+            entity.Property(e => e.PasswordHash).HasColumnName("passwordHash");
+            entity.Property(e => e.PasswordSalt).HasColumnName("passwordSalt");
             entity.Property(e => e.Role)
                 .HasMaxLength(20)
                 .HasColumnName("role");
@@ -138,9 +133,7 @@ public partial class FuelManagementSystemContext : DbContext
 
             entity.ToTable("vehicle");
 
-            entity.Property(e => e.Vehicleid)
-                .ValueGeneratedNever()
-                .HasColumnName("vehicleid");
+            entity.Property(e => e.Vehicleid).HasColumnName("vehicleid");
             entity.Property(e => e.Fuelefficiency)
                 .HasMaxLength(20)
                 .HasColumnName("fuelefficiency");

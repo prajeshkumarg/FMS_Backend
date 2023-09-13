@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FMS_Backend;
+namespace FMS_Backend.FMSModels;
 
 public partial class FuelInventory
 {
