@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using FMS_Backend;
 using FMS_Backend.FMSModels;
 using System.Security.Cryptography;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace FMS_Backend.Controllers
 {
@@ -16,10 +19,12 @@ namespace FMS_Backend.Controllers
     public class UsersController : ControllerBase
     {
         private readonly FuelManagementSystemContext _context;
+        private readonly IConfiguration _configuration;
         public User user = new User();
 
-        public UsersController(FuelManagementSystemContext context)
+        public UsersController(FuelManagementSystemContext context, IConfiguration configuration)
         {
+            _configuration = configuration;
             _context = context;
         }
 
@@ -131,31 +136,22 @@ namespace FMS_Backend.Controllers
             }
             if (UserExists(request.Userid))
             {
+                var userR = _context.Users.FirstOrDefault(x=>x.Username == request.Username);
+                if (VerifyPasswordHash(request.Password, userR.PasswordHash, userR.PasswordSalt))
+                {
+                    var token = CreateToken(userR);
+                    return Ok(token);
+                }
+                else
+                {
+                    return BadRequest("Wrong Username or password");
+                }
 
             }
             else
             {
-                return Problem("Username or Password is Wrong");
+                return Problem("Wrong Username or password");
             }
-
-            _context.Users.Add(user);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserExists(user.Userid))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetUser", new { id = user.Userid }, user);
         }
 
         // DELETE: api/Users/5
@@ -176,6 +172,29 @@ namespace FMS_Backend.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, "Admin")
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
         }
 
         private bool UserExists(int id)
