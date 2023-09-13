@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FMS_Backend.FMSModels;
+using FMS_Backend;
 
 namespace FMS_Backend.Controllers
 {
@@ -83,6 +83,7 @@ namespace FMS_Backend.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Route("SignUp")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
           if (_context.Users == null)
@@ -90,7 +91,21 @@ namespace FMS_Backend.Controllers
               return Problem("Entity set 'FuelManagementSystemContext.Users'  is null.");
           }
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (UserExists(user.Userid))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return CreatedAtAction("GetUser", new { id = user.Userid }, user);
         }
@@ -118,6 +133,10 @@ namespace FMS_Backend.Controllers
         private bool UserExists(int id)
         {
             return (_context.Users?.Any(e => e.Userid == id)).GetValueOrDefault();
+        }
+        private bool UserExists(string username)
+        {
+            return (_context.Users?.Any(e => e.Username == username)).GetValueOrDefault();
         }
     }
 }

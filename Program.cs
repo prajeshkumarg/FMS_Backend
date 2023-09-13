@@ -1,4 +1,4 @@
-using FMS_Backend.FMSModels;
+using FMS_Backend;
 using Microsoft.EntityFrameworkCore;
 
 namespace FMS_Backend

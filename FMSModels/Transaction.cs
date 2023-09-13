@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FMS_Backend.FMSModels;
+namespace FMS_Backend;
 
 public partial class Transaction
 {
