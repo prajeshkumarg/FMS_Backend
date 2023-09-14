@@ -109,6 +109,9 @@ namespace FMS_Backend.Controllers
             user.Contact = request.Contact;
             user.Role = request.Role;
 
+
+
+
             _context.Users.Add(user);
             try
             {
