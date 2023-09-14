@@ -2,7 +2,7 @@
 {
     public class UserDto
     {
-        public int Userid { get; set; }
+        public long? Userid { get; set; }
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Contact { get; set; } = string.Empty;

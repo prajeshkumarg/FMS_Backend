@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FMS_Backend.Controllers
 {
@@ -29,7 +30,9 @@ namespace FMS_Backend.Controllers
         }
 
         // GET: api/Users
-        [HttpGet]
+        //[Authorize(Roles = "Admin")]
+        [Route("showuser")]
+        [HttpGet] 
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
           if (_context.Users == null)
@@ -91,6 +94,7 @@ namespace FMS_Backend.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [AllowAnonymous]
         [Route("SignUp")]
         public async Task<ActionResult<User>> PostUser(UserDto request)
         {
@@ -104,7 +108,6 @@ namespace FMS_Backend.Controllers
             user.PasswordSalt = passwordSalt;
             user.Contact = request.Contact;
             user.Role = request.Role;
-            user.Userid = request.Userid;
 
             _context.Users.Add(user);
             try
@@ -113,7 +116,7 @@ namespace FMS_Backend.Controllers
             }
             catch (DbUpdateException)
             {
-                if (UserExists(user.Userid))
+                if (UserExists(user.Username))
                 {
                     return Conflict();
                 }
@@ -127,6 +130,7 @@ namespace FMS_Backend.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("SignIn")]
         public async Task<ActionResult<User>> LoginUser(UserDto request)
         {
@@ -134,7 +138,7 @@ namespace FMS_Backend.Controllers
             {
                 return Problem("Entity set 'FuelManagementSystemContext.Users'  is null.");
             }
-            if (UserExists(request.Userid))
+            if (UserExists(request.Username))
             {
                 var userR = _context.Users.FirstOrDefault(x=>x.Username == request.Username);
                 if (VerifyPasswordHash(request.Password, userR.PasswordHash, userR.PasswordSalt))
@@ -183,7 +187,7 @@ namespace FMS_Backend.Controllers
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value));
+                _configuration.GetSection("JWT:Key").Value));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
@@ -197,7 +201,7 @@ namespace FMS_Backend.Controllers
             return jwt;
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(long id)
         {
             return (_context.Users?.Any(e => e.Userid == id)).GetValueOrDefault();
         }

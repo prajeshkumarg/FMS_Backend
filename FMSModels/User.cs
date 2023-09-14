@@ -5,8 +5,6 @@ namespace FMS_Backend.FMSModels;
 
 public partial class User
 {
-    public int Userid { get; set; }
-
     public string? Username { get; set; }
 
     public string? Contact { get; set; }
@@ -16,4 +14,6 @@ public partial class User
     public byte[]? PasswordHash { get; set; }
 
     public byte[]? PasswordSalt { get; set; }
+
+    public long? Userid { get; set; }
 }
