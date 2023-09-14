@@ -144,7 +144,7 @@ namespace FMS_Backend.Controllers
                 if (VerifyPasswordHash(request.Password, userR.PasswordHash, userR.PasswordSalt))
                 {
                     var token = CreateToken(userR);
-                    return Ok(new {token,userR.Role});
+                    return Ok(new {token,userR.Role,userR.Userid});
                 }
                 else
                 {
