@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FMS_Backend.FMSModels;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FMS_Backend.Controllers
 {
@@ -35,14 +36,22 @@ namespace FMS_Backend.Controllers
         }
 
         // GET: api/Vehicles/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Vehicle>> GetVehicle(int id)
+        [HttpGet("{token}")]
+        //[Route("showVehicle/{token}")]
+        public async Task<ActionResult<Vehicle>> GetVehicle(string token)
         {
           if (_context.Vehicles == null)
           {
               return NotFound();
           }
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var claims = jwtToken.Claims;
+            var uid = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid")?.Value;
+            int id = int.Parse(uid);
+            //var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = _context.Vehicles.FirstOrDefault(x => x.Userid == id);
 
             if (vehicle == null)
             {
