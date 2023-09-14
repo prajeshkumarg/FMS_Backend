@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FMS_Backend.FMSModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FMS_Backend.Controllers
 {
@@ -21,6 +22,8 @@ namespace FMS_Backend.Controllers
         }
 
         // GET: api/Vehicles
+        [Authorize(Roles = "Admin")]
+        [Route ("getallvehicles")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicles()
         {
@@ -45,6 +48,7 @@ namespace FMS_Backend.Controllers
             {
                 return NotFound();
             }
+           
 
             return vehicle;
         }
