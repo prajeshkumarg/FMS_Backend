@@ -30,7 +30,7 @@ namespace FMS_Backend.Controllers
         }
 
         // GET: api/Users
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("showuser")]
         [HttpGet] 
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
