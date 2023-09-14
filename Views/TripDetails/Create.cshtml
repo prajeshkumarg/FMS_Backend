@@ -1,0 +1,73 @@
+﻿@model FMS_Backend.FMSModels.TripDetail
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>TripDetail</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Tripid" class="control-label"></label>
+                <input asp-for="Tripid" class="form-control" />
+                <span asp-validation-for="Tripid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicleid" class="control-label"></label>
+                <input asp-for="Vehicleid" class="form-control" />
+                <span asp-validation-for="Vehicleid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Userid" class="control-label"></label>
+                <input asp-for="Userid" class="form-control" />
+                <span asp-validation-for="Userid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tripdatetime" class="control-label"></label>
+                <input asp-for="Tripdatetime" class="form-control" />
+                <span asp-validation-for="Tripdatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Odometerstart" class="control-label"></label>
+                <input asp-for="Odometerstart" class="form-control" />
+                <span asp-validation-for="Odometerstart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Odometerend" class="control-label"></label>
+                <input asp-for="Odometerend" class="form-control" />
+                <span asp-validation-for="Odometerend" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fuelstart" class="control-label"></label>
+                <input asp-for="Fuelstart" class="form-control" />
+                <span asp-validation-for="Fuelstart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fuelend" class="control-label"></label>
+                <input asp-for="Fuelend" class="form-control" />
+                <span asp-validation-for="Fuelend" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tripmileage" class="control-label"></label>
+                <input asp-for="Tripmileage" class="form-control" />
+                <span asp-validation-for="Tripmileage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

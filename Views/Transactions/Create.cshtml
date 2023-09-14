@@ -1,0 +1,63 @@
+﻿@model FMS_Backend.FMSModels.Transaction
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Transaction</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Transactionid" class="control-label"></label>
+                <input asp-for="Transactionid" class="form-control" />
+                <span asp-validation-for="Transactionid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicleid" class="control-label"></label>
+                <input asp-for="Vehicleid" class="form-control" />
+                <span asp-validation-for="Vehicleid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fuelingdate" class="control-label"></label>
+                <input asp-for="Fuelingdate" class="form-control" />
+                <span asp-validation-for="Fuelingdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fuelinglocid" class="control-label"></label>
+                <input asp-for="Fuelinglocid" class="form-control" />
+                <span asp-validation-for="Fuelinglocid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Userid" class="control-label"></label>
+                <input asp-for="Userid" class="form-control" />
+                <span asp-validation-for="Userid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fuelcost" class="control-label"></label>
+                <input asp-for="Fuelcost" class="form-control" />
+                <span asp-validation-for="Fuelcost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Paymentmethod" class="control-label"></label>
+                <input asp-for="Paymentmethod" class="form-control" />
+                <span asp-validation-for="Paymentmethod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

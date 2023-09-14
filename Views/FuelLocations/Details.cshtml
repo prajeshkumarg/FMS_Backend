@@ -1,0 +1,36 @@
+﻿@model FMS_Backend.FMSModels.FuelLocation
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>FuelLocation</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Locname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Locname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Geocode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Geocode)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Locid">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

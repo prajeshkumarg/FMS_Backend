@@ -1,0 +1,59 @@
+﻿@model IEnumerable<FMS_Backend.FMSModels.FuelInventory>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Locid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fueltype)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fuelqty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fuelprice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fueldensity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Locid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fueltype)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fuelqty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fuelprice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fueldensity)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Fuelid">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Fuelid">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Fuelid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

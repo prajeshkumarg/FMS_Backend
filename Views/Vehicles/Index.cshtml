@@ -1,0 +1,53 @@
+﻿@model IEnumerable<FMS_Backend.FMSModels.Vehicle>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicletype)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fueltype)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fuelefficiency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Userid)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vehicletype)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fueltype)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fuelefficiency)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Userid)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Vehicleid">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Vehicleid">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Vehicleid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
