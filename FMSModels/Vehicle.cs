@@ -5,8 +5,6 @@ namespace FMS_Backend.FMSModels;
 
 public partial class Vehicle
 {
-    public int Vehicleid { get; set; }
-
     public string? Vehicletype { get; set; }
 
     public string? Fueltype { get; set; }
@@ -14,4 +12,6 @@ public partial class Vehicle
     public string? Fuelefficiency { get; set; }
 
     public int? Userid { get; set; }
+
+    public int? Vehicleid { get; set; }
 }

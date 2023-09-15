@@ -5,8 +5,6 @@ namespace FMS_Backend.FMSModels;
 
 public partial class TripDetail
 {
-    public int Tripid { get; set; }
-
     public int? Vehicleid { get; set; }
 
     public int? Userid { get; set; }
@@ -22,4 +20,6 @@ public partial class TripDetail
     public double? Fuelend { get; set; }
 
     public double? Tripmileage { get; set; }
+
+    public int? Tripid { get; set; }
 }

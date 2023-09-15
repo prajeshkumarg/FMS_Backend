@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FMS_Backend.FMSModels;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FMS_Backend.Controllers
 {
@@ -22,6 +24,7 @@ namespace FMS_Backend.Controllers
 
         // GET: api/TripDetails
         [HttpGet]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult<IEnumerable<TripDetail>>> GetTripDetails()
         {
           if (_context.TripDetails == null)
@@ -32,21 +35,30 @@ namespace FMS_Backend.Controllers
         }
 
         // GET: api/TripDetails/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TripDetail>> GetTripDetail(int id)
+        [HttpGet("{token}")]
+        //[Route("tripDetails/{token}")]
+        public async Task<ActionResult<List<TripDetail>>> ShowTripDetail(string token)
         {
           if (_context.TripDetails == null)
           {
               return NotFound();
           }
-            var tripDetail = await _context.TripDetails.FindAsync(id);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var claims = jwtToken.Claims;
+            var uid = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid")?.Value;
+            int id = int.Parse(uid);
+            //var vehicle = await _context.Vehicles.FindAsync(id);
+            var tripDetail = _context.TripDetails.FirstOrDefault(x => x.Userid == id);
+            List<TripDetail> tdL = _context.TripDetails.Where(x => x.Userid == id).ToList();
 
             if (tripDetail == null)
             {
                 return NotFound();
             }
 
-            return tripDetail;
+            return tdL;
         }
 
         // PUT: api/TripDetails/5
@@ -83,30 +95,26 @@ namespace FMS_Backend.Controllers
         // POST: api/TripDetails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TripDetail>> PostTripDetail(TripDetail tripDetail)
+        [Route("addTripDetail")]
+        public async Task<ActionResult<TripDetail>> AddTripDetail(TripDetail tripDetail)
         {
           if (_context.TripDetails == null)
           {
               return Problem("Entity set 'FuelManagementSystemContext.TripDetails'  is null.");
           }
+            tripDetail.Tripmileage = (tripDetail.Odometerend - tripDetail.Odometerstart) / (tripDetail.Fuelend - tripDetail.Fuelstart);
             _context.TripDetails.Add(tripDetail);
             try
             {
+                //_context.TripDetails.ExecuteUpdate(s => s.SetProperty(e => e.Tripmileage, e => (e.Odometerend - e.Odometerstart)/(e.Fuelend-e.Fuelstart)));
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                if (TripDetailExists(tripDetail.Tripid))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+
             }
 
-            return CreatedAtAction("GetTripDetail", new { id = tripDetail.Tripid }, tripDetail);
+            return Ok("Successfully Added");
         }
 
         // DELETE: api/TripDetails/5

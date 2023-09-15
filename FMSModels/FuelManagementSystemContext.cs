@@ -29,7 +29,7 @@ public partial class FuelManagementSystemContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("host=localhost;database=FuelManagementSystem;username=postgres;password=aA1234567890");
+        => optionsBuilder.UseNpgsql("Host=localhost;Database=FuelManagementSystem;Username=postgres;Password=aA1234567890");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -94,9 +94,7 @@ public partial class FuelManagementSystemContext : DbContext
 
             entity.ToTable("trip_details");
 
-            entity.Property(e => e.Tripid)
-                .ValueGeneratedNever()
-                .HasColumnName("tripid");
+            entity.Property(e => e.Tripid).HasColumnName("tripid");
             entity.Property(e => e.Fuelend).HasColumnName("fuelend");
             entity.Property(e => e.Fuelstart).HasColumnName("fuelstart");
             entity.Property(e => e.Odometerend).HasColumnName("odometerend");
@@ -129,11 +127,10 @@ public partial class FuelManagementSystemContext : DbContext
 
         modelBuilder.Entity<Vehicle>(entity =>
         {
-            entity.HasKey(e => e.Vehicleid).HasName("vehicle_pkey");
+            entity
+                .HasNoKey()
+                .ToTable("vehicle");
 
-            entity.ToTable("vehicle");
-
-            entity.Property(e => e.Vehicleid).HasColumnName("vehicleid");
             entity.Property(e => e.Fuelefficiency)
                 .HasMaxLength(20)
                 .HasColumnName("fuelefficiency");
@@ -141,6 +138,9 @@ public partial class FuelManagementSystemContext : DbContext
                 .HasMaxLength(60)
                 .HasColumnName("fueltype");
             entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.Property(e => e.Vehicleid)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("vehicleid");
             entity.Property(e => e.Vehicletype)
                 .HasMaxLength(60)
                 .HasColumnName("vehicletype");

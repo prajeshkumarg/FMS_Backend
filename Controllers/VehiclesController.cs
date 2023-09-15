@@ -95,8 +95,10 @@ namespace FMS_Backend.Controllers
 
         // POST: api/Vehicles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
+        [Route("addvehicle")]
         [HttpPost]
-        public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle vehicle)
+        public async Task<ActionResult<Vehicle>> AddVehicle(Vehicle vehicle)
         {
           if (_context.Vehicles == null)
           {
@@ -105,7 +107,7 @@ namespace FMS_Backend.Controllers
             _context.Vehicles.Add(vehicle);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVehicle", new { id = vehicle.Vehicleid }, vehicle);
+            return Ok("Successfully Added");
         }
 
         // DELETE: api/Vehicles/5
