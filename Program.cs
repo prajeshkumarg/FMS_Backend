@@ -27,6 +27,8 @@ namespace FMS_Backend
                     pol.AllowAnyHeader();
                     pol.AllowAnyMethod();
                     pol.AllowAnyOrigin();
+
+
                 });
             });
             builder.Services.AddSwaggerGen(options =>

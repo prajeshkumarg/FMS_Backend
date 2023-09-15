@@ -107,7 +107,7 @@ namespace FMS_Backend.Controllers
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.Contact = request.Contact;
-            user.Role = request.Role;
+            user.Role = "Driver";
 
 
 

@@ -102,7 +102,7 @@ namespace FMS_Backend.Controllers
           {
               return Problem("Entity set 'FuelManagementSystemContext.TripDetails'  is null.");
           }
-            tripDetail.Tripmileage = (tripDetail.Odometerend - tripDetail.Odometerstart) / (tripDetail.Fuelend - tripDetail.Fuelstart);
+            tripDetail.Tripmileage = (tripDetail.Odometerend - tripDetail.Odometerstart) / (tripDetail.Fuelstart - tripDetail.Fuelend);
             _context.TripDetails.Add(tripDetail);
             try
             {
